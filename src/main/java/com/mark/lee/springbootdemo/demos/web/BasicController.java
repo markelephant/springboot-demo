@@ -16,6 +16,10 @@
 
 package com.mark.lee.springbootdemo.demos.web;
 
+import com.mark.lee.springbootdemo.demos.drools.entity.Order;
+import org.kie.api.KieBase;
+import org.kie.api.runtime.KieSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +32,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class BasicController {
 
+    @Autowired
+    private KieBase kieBase;
+
     // http://127.0.0.1:8080/hello?name=lisi
     @RequestMapping("/hello")
     @ResponseBody
@@ -36,13 +43,18 @@ public class BasicController {
     }
 
     // http://127.0.0.1:8080/user
-    @RequestMapping("/user")
+    @RequestMapping("/order")
     @ResponseBody
-    public User user() {
-        User user = new User();
-        user.setName("theonefx");
-        user.setAge(666);
-        return user;
+    public Order order() {
+        Order order = new Order();
+        order.setAmount(666);
+
+        KieSession kieSession = kieBase.newKieSession();
+        kieSession.insert(order);
+        kieSession.fireAllRules();
+        kieSession.dispose();
+
+        return order;
     }
 
     // http://127.0.0.1:8080/save_user?name=newName&age=11

@@ -1,0 +1,49 @@
+package rules;
+
+import com.mark.lee.springbootdemo.demos.drools.entity.Order;
+
+global java.util.List myGlobalList   //定义全局变量，可以跨规则使用
+
+//100元以下 不加分
+rule "score_1"
+when
+    $order:Order(amount<100)//不写默认发挥true
+then
+    $order.setScore(0);
+    System.out.println("触发规则 100元以下不加分");
+end
+
+
+//100-500 加一百分
+rule "score_2"
+when
+    $order:Order(amount>=100&&amount<500)
+then
+    $order.setScore(100);
+    System.out.println("触发规则 100元以上，500元以下加100分");
+end
+
+//500-1000 加500分
+
+rule "score_3"
+//    enabled true //默认是true 默认不生效
+//    no-loop true //防止死循环，匹配过的规则只使用一次
+//    date-effective "2024-09-19" //生效时间，大于这个时间生效
+//    date-expires "2024-09-19"//大于这个时间过期
+//    activation-group "test" //相同的一组只会有一个规则执行，其他的不会执行
+when
+    $order:Order(amount>=500&&amount<1000)
+then
+    $order.setScore(500);
+//    retract($order) //删除工作内存中的元素
+    System.out.println("触发规则 500元以上，1000元以下加500分");
+end
+
+//1000元以上，加1000分
+rule "score_4"
+when
+    $order:Order(amount>=1000)
+then
+    $order.setScore(1000);
+    System.out.println("触发规则 1000元以上，加1000分");
+end
