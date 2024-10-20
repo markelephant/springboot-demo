@@ -41,4 +41,12 @@ public class PathVariableController {
     public String getRegExp(@PathVariable("regexp1") String regexp1) {
         return "URI Part : " + regexp1;
     }
+
+
+    public static void main(String[] args) {
+        String s = new String("a");
+        String intern = s.intern();
+        String s2 = "a";
+        System.out.println(intern==s2);
+    }
 }
